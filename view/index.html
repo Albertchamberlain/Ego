@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ego-主页面</title>
+    <link rel="stylesheet" type="text/css" href="/static/js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/static/js/easyui/themes/icon.css">
+    <script type="text/javascript" src="/static/js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="/static/js/easyui/jquery.easyui.min.js"></script>
+
+    <link rel="stylesheet" href="/static/js//kindeditor/themes/default/default.css" />
+    <script type="text/javascript" src="/static/js/kindeditor/kindeditor.js"></script>
+    <script type="text/javascript" src="/static/js/kindeditor/lang/zh_CN.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $("#index_tree").tree({
+                onClick: function(node){
+                   if( $("#index_tree").tree("isLeaf",node.target)){
+                        if($("#index_tabes").tabs("getTab",node.text)){
+                            $("#index_tabes").tabs("select",node.text)
+
+                        }else{
+                            $('#index_tabes').tabs('add',{
+                                title: node.text,
+                                selected: true,
+                                closable:true,
+                                href:node.attributes.url
+                            });
+                        }
+                   }
+                }
+            });
+        });
+
+        //全局KindEditor对象
+        var K =null
+        KindEditor.ready(function(n) {
+            K=n
+        });
+    </script>
+</head>
+<body class="easyui-layout">
+<div data-options="region:'west',title:'菜单',split:true" style="width:200px;">
+    <ul class="easyui-tree" id="index_tree">
+        <li>
+            <span>商品管理</span>
+            <ul>
+                <li data-options="attributes:{'url':'/page/item_add'}">
+                    <span >新增商品</span>
+                </li>
+                <li  data-options="attributes:{'url':'/page/item'}">
+                    <span>查询商品</span>
+                </li>
+                <li  data-options="attributes:{'url':'/page/item_param'}">
+                    <span>规格参数</span>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>
+<div data-options="region:'center',title:'内容'" style="padding:5px;background:#eee;">
+    <div id="index_tabes" class="easyui-tabs" style="width:500px;height:250px;" data-options="fit:true">
+        <div title="首页" style="padding:20px;">
+            欢迎使用Ego后台管理系统
+        </div>
+    </div>
+</div>
+</body>
+</html>

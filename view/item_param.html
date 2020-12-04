@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+    $(function () {
+        $('#item_param_table').datagrid({
+            url: '/item/param/show',
+            columns: [[
+                {field: 'id', title: 'ID', width: 100},
+                {field: 'itemCatId', title: '商品类目ID', width: 100},
+                {field: 'catName', title: '商品类目', width: 100},
+                {field: 'paramData', title: '规格(只显示分组名称)', width: 100},
+                {field: 'created', title: '创建日期', width: 100},
+                {field: 'updated', title: '更新日期', width: 100}
+            ]],
+            fitColumns: true,
+            striped: true,
+            rownumbers: true,
+            pagination: true,
+            toolbar: [{
+                iconCls: 'icon-add',
+                text: '新增',
+                handler: function () {
+                    $('#item_param_dialog').dialog({
+                        title: '新增规格参数',
+                        width: 600,
+                        height: 400,
+                        closed: false,
+                        cache: false,
+                        href: '/page/item_param_add',
+                        modal: true
+                    });
+                }
+            }, {
+                iconCls: 'icon-edit',
+                text: '编辑',
+                handler: function () {
+                    var ss = $("#item_param_table").datagrid("getSelections");
+                    if (ss.length != 1) {
+                        $.messager.alert("系统消息", "请选择要编辑的数据,只能编辑一行", "warning")
+                    } else {
+                        $('#item_param_dialog').dialog({
+                            title: '编辑规格参数',
+                            width: 600,
+                            height: 400,
+                            closed: false,
+                            cache: false,
+                            href: '/page/item_param_edit',
+                            modal: true,
+                            onLoad:function () {
+                                var row = ss[0];
+                                $("#item_param_edit_selectcate_span").html(row.catName);
+                                $("#item_param_edit_selectcate_hidden").val(row.itemCatId);
+                                $("#item_param_edit_id_hidden").val(row.id);
+                                var paramData = eval("("+row.paramData+")");
+                                var paramDataString = "";
+                                for(var i =0;i<paramData.length;i++){
+                                    paramDataString+='<div class="item_param_edit_groupdiv">\n' +
+                                            '        <input type="text" class="item_param_edit_grouptxt" value="'+paramData[i].group+'"/> <a href="#" class="item_param_edit_addgroup">添加规格</a> <a\n' +
+                                            '            href="#" class="item_param_edit_rmgroup">删除分组</a>\n' +
+                                            '        <ul class="item_param_edit_subgroup">';
+                                    for(var j =0;j<paramData[i].params.length;j++){
+                                        paramDataString+='<li><input type="text" class="item_param_edit_subgrouptxt" value="'+paramData[i].params[j]+'"/> <a href="#" class="item_param_edit_removesubgroup">删除</a></li>';
+                                    }
+                                    paramDataString+='        </ul>\n' +
+                                            '    </div>';
+                                }
+                                $("#item_param_edit_submit").before(paramDataString);
+                            }
+                        });
+                    }
+                }
+            }, {
+                iconCls: 'icon-cancel',
+                text: '删除',
+                handler: function () {
+                    var ss = $("#item_param_table").datagrid("getSelections");
+                    if (ss.length <= 0) {
+                        $.messager.alert("系统消息", "请选择要删除的数据", "warning")
+                    } else {
+                        var ids = "";
+                        for (var i = 0; i < ss.length; i++) {
+                            ids += ss[i].id;
+                            if (i < ss.length - 1) {
+                                ids += ",";
+                            }
+                        }
+                        $.post("/item/param/delete", {"ids": ids}, function (data) {
+                            if (data.Status == 200) {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '删除' + ids + '成功',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                                $("#item_param_table").datagrid("reload")
+                            } else {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '删除失败',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                            }
+                        })
+                    }
+                }
+            }]
+
+        });
+    })
+</script>
+<table id="item_param_table"></table>
+<div id="item_param_dialog"></div>
+</body>
+</html>

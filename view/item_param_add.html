@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<style type="text/css">
+    .item_param_add_group {
+        margin: 10px;
+    }
+
+    .item_param_add_subgroup {
+        padding-left: 20px;
+    }
+</style>
+<script type="text/javascript">
+    $(function () {
+        //点击"+"添加子分组
+        $(".item_param_add_addgroup").live("click", function () {
+            $(this).nextAll("ul").append('<li><input type="text"/> <a  href="#" class="item_param_add_removesubgroup">删除</a></li>');
+            return false;
+        });
+        //点击添加分组
+        $("#item_param_add_btn").click(function () {
+            $("#item_param_add_submit").before('    <div class="item_param_add_groupdiv">\n' +
+                    '        <input type="text" class="item_param_add_grouptxt"/> <a  href="#" class="item_param_add_addgroup">添加规格</a> <a  href="#" class="item_param_add_rmgroup">删除分组</a>\n' +
+                    '        <ul class="item_param_add_subgroup">\n' +
+                    '            <li><input type="text" class="item_param_add_subgrouptxt"/> <a href="#" class="item_param_add_removesubgroup">删除</a></li>\n' +
+                    '        </ul>\n' +
+                    '    </div>');
+            return false;
+        });
+        //删除
+        $(".item_param_add_removesubgroup").live("click", function () {
+            $(this).parent().remove();
+        });
+        //删除分组
+        $(".item_param_add_rmgroup").live("click", function () {
+            $(this).parent().remove();
+        });
+        //新增按钮实现
+        $("#item_param_add_submit").click(function () {
+            if ($("#item_param_add_selectcate_hidden").val() == "") {
+                $.messager.alert("系统消息", "请选择类目", "warning");
+            } else {
+                var paramData = "[";
+                $.each($(".item_param_add_grouptxt"), function (i, n) {
+                    paramData += '{"group":' + '"' + $(n).val() + '"' + ',"params":[';
+                    var $lis = $(this).nextAll("ul").children();
+                    $.each($lis, function (i2, n2) {
+                        paramData += '"' + $(n2).children("input").val() + '"';
+                        if (i2 < $lis.length - 1) {
+                            paramData += ","
+                        }
+                    });
+                    paramData += "]}";
+                    if (i < $(".item_param_add_grouptxt").length - 1) {
+                        paramData += ","
+                    }
+                });
+                paramData += "]";
+                $.post("/item/param/add",{"itemCatId":$("#item_param_add_selectcate_hidden").val(),"paramData":paramData},function (data) {
+                    if (data.Status==200){
+                        $.messager.show({
+                            title: '系统消息',
+                            msg: '新增规格参数成功',
+                            showType: 'show',
+                            showType: 'slide'
+                        });
+                        $('#item_param_dialog').dialog("close");
+                        $("#item_param_table").datagrid("reload")
+                    }else{
+                        $.messager.show({
+                            title: '系统消息',
+                            msg: '新增规格参数失败',
+                            showType: 'show',
+                            showType: 'slide'
+                        });
+                    }
+                })
+            }
+        });
+        //选择类目按钮
+        $("#item_param_add_selectcate").click(function () {
+            $('#item_param_add_dialog').dialog({
+                title: '选择类目',
+                width: 600,
+                height: 400,
+                closed: false,
+                cache: false,
+                href: '/page/item_cat_tree',
+                modal: true,
+                onLoad: function () {
+                    $('#category_tree_tree').tree({
+                        url: '/item/cat/show',
+                        onClick: function (node) {
+                            if (node.state == "open") {
+                                $.post("/item/param/iscat", {"catid": node.id}, function (data) {
+                                    if (data.Status == 200) {
+                                        $("#item_param_add_selectcate_span").html(node.text);
+                                        $("#item_param_add_selectcate_hidden").val(node.id);
+                                        $('#item_param_add_dialog').dialog("close");
+                                    } else {
+                                        $.messager.alert("系统消息", "该类目已经添加了规格参数", "warning");
+                                    }
+                                })
+
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    });
+</script>
+<div class="item_param_add_group">
+    <a id="item_param_add_selectcate" href="#" class="easyui-linkbutton">选择类目</a>&nbsp;
+    <span id="item_param_add_selectcate_span"></span>
+    <input name="Cid" id="item_param_add_selectcate_hidden" class="easyui-validatebox" type="hidden"
+           data-options="required:true"/>
+    <br/>
+</div>
+<div style="padding:10px;" id="item_param_add_container">
+    <a href="#" id="item_param_add_btn" class="easyui-linkbutton" data-options="iconCls:'icon-add'">添加分组</a><br/>
+    <div class="item_param_add_groupdiv">
+        <input type="text" class="item_param_add_grouptxt"/> <a href="#" class="item_param_add_addgroup">添加规格</a> <a
+            href="#" class="item_param_add_rmgroup">删除分组</a>
+        <ul class="item_param_add_subgroup">
+            <li><input type="text" class="item_param_add_subgrouptxt"/> <a href="#"
+                                                                           class="item_param_add_removesubgroup">删除</a>
+            </li>
+        </ul>
+    </div>
+    <a href="#" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" id="item_param_add_submit">新增</a>
+</div>
+<div id="item_param_add_dialog"></div>
+</body>
+</html>

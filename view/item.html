@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+    $(function () {
+        $('#item_table').datagrid({
+            url: '/showItem',
+            columns: [[
+                {field: 'Id', title: '商品ID', width: 100},
+                {field: 'Title', title: '商品标题', width: 100},
+                {field: 'CategoryName', title: '叶子类目', width: 100},
+                {field: 'SellPoint', title: '卖点', width: 100},
+                {field: 'Price', title: '价格', width: 100},
+                {field: 'Num', title: '库存数量', width: 100},
+                {field: 'Barcode', title: '条形码', width: 100},
+                {
+                    field: 'Status', title: '状态', width: 100, formatter: function (value, row, index) {
+                        if (value == 1) {
+                            return "正常";
+                        } else if (value == 2) {
+                            return "<span style='color:blue'>下架</span>";
+                        } else if (value == 3) {
+                            return "<span style='color:red'>删除</span>";
+                        }
+                    }
+                },
+                {field: 'Created', title: '创建日期', width: 100},
+                {field: 'Updated', title: '更新日期', width: 100}
+            ]],
+            fitColumns: true,
+            striped: true,
+            rownumbers: true,
+            pagination: true,
+            toolbar: [{
+                iconCls: 'icon-add',
+                text: '新增',
+                handler: function () {
+                    var node = "新增商品"
+                    if ($("#index_tabes").tabs("getTab", node)) {
+                        $("#index_tabes").tabs("select", node)
+                    } else {
+                        $('#index_tabes').tabs('add', {
+                            title: node,
+                            selected: true,
+                            href: '/page/item_add'
+                        });
+                    }
+                }
+            }, {
+                iconCls: 'icon-edit',
+                text: '编辑',
+                handler: function () {
+                    var ss = $("#item_table").datagrid("getSelections");
+                    if (ss.length != 1) {
+                        $.messager.alert("系统消息", "请选择要修改的数据,只能选择一行", "warning")
+                    } else {
+                        $('#item_dialog').dialog({
+                            title: '修改商品',
+                            width: 850,
+                            height: 400,
+                            closed: false,
+                            cache: false,
+                            href: '/page/item_update',
+                            modal: true,
+                            onLoad: function () {
+                                $.post("/item/showItemById", {"id": ss[0].Id}, function (json) {
+                                    $("#item_update_id").val(json.Id);
+                                    $("#item_update_selectcate_hidden").val(json.Cid);
+                                    $("#item_update_selectcate_span").html(json.CategoryName)
+                                    $("#item_update_title").val(json.Title);
+                                    $("#item_update_sellpoint").val(json.SellPoint);
+                                    $("#item_update_price_hidden").val(json.Price)
+                                    $("#item_update_price_show").val(parseInt(json.Price)/100);
+                                    $("#item_update_num").val(json.Num);
+                                    $("#item_update_image_hidden").val(json.Image);
+                                    var itemUpdateImageV = "";
+                                    var itemUpdateImgArr= json.Image.split(",");
+                                    for (var i =0;i<itemUpdateImgArr.length;i++){
+                                        itemUpdateImageV+='<img src="'+itemUpdateImgArr[i]+'"  width="50" height="50"/>';
+                                    }
+                                    $("#item_update_upload_span").html(itemUpdateImageV);
+                                    var itemUpdateStatusV ="";
+                                    if (json.Status==1){
+                                        itemUpdateStatusV+='<option value="1" selected="selected">正常</option>';
+                                        itemUpdateStatusV+='<option value="2">下架</option>';
+                                        itemUpdateStatusV+='<option value="3">删除</option>';
+                                    }
+                                    if (json.Status==2){
+                                        itemUpdateStatusV+='<option value="1" >正常</option>';
+                                        itemUpdateStatusV+='<option value="2" selected="selected">下架</option>';
+                                        itemUpdateStatusV+='<option value="3">删除</option>';
+                                    }
+                                    if (json.Status==3){
+                                        itemUpdateStatusV+='<option value="1" >正常</option>';
+                                        itemUpdateStatusV+='<option value="2">下架</option>';
+                                        itemUpdateStatusV+='<option value="3" selected="selected">删除</option>';
+                                    }
+
+                                    $("#item_update_status").html(itemUpdateStatusV);
+                                    item_update_editor.html(json.Desc);
+                                });
+                                //显示商品规格参数
+                                $("#item_update_hiddenparam").hide();
+                                $.post("/item/paramitem/selid",{"id": ss[0].Id}, function (data) {
+                                    if(data.Status==200){
+                                        $("#item_update_hiddenparam").show();
+                                        var json= eval("("+data.Data+")");
+                                        var paramString = "";
+                                        for(var i = 0 ;i<json.length;i++){
+                                            paramString+="<div class='item_update_groupname'>"+json[i].group+"</div>";
+                                            paramString+="<ul>";
+                                            for(var j=0;j<json[i].params.length;j++){
+                                                paramString+="<li>"+json[i].params[j].k+":<input type='text' sign='"+json[i].params[j].k+"' value='"+json[i].params[j].v+"'/></li>";
+                                            }
+                                            paramString+="</ul>";
+                                        }
+                                        $("#item_update_param_td").html(paramString);
+                                    }
+                                });
+                            }
+                        });
+                    }
+                }
+            }, {
+                iconCls: 'icon-cancel',
+                text: '删除',
+                handler: function () {
+                    var ss = $("#item_table").datagrid("getSelections");
+                    if (ss.length <= 0) {
+                        $.messager.alert("系统消息", "请选择要删除的数据", "warning")
+                    } else {
+                        var ids = "";
+                        for (var i = 0; i < ss.length; i++) {
+                            ids += ss[i].Id;
+                            if (i < ss.length - 1) {
+                                ids += ",";
+                            }
+                        }
+                        $.post("/item/delete", {"ids": ids}, function (data) {
+                            if (data.Status == 200) {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '删除' + ids + '成功',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                                $("#item_table").datagrid("reload")
+                            } else {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '删除失败',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                            }
+                        })
+                    }
+                }
+            }, '-', {
+                iconCls: 'icon-remove',
+                text: '上架',
+                handler: function () {
+                    var ss = $("#item_table").datagrid("getSelections");
+                    if (ss.length <= 0) {
+                        $.messager.alert("系统消息", "请选择要上架的数据", "warning")
+                    } else {
+                        var ids = "";
+                        for (var i = 0; i < ss.length; i++) {
+                            ids += ss[i].Id;
+                            if (i < ss.length - 1) {
+                                ids += ",";
+                            }
+                        }
+                        $.post("/item/instock", {"ids": ids}, function (data) {
+                            if (data.Status == 200) {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '上架' + ids + '成功',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                                $("#item_table").datagrid("reload")
+                            } else {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '上架失败,请检查商品是否已经处于正常状态',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                            }
+                        })
+                    }
+                }
+            }, {
+                iconCls: 'icon-remove',
+                text: '下架',
+                handler: function () {
+                    var ss = $("#item_table").datagrid("getSelections");
+                    if (ss.length <= 0) {
+                        $.messager.alert("系统消息", "请选择要下架的数据", "warning")
+                    } else {
+                        var ids = "";
+                        for (var i = 0; i < ss.length; i++) {
+                            ids += ss[i].Id;
+                            if (i < ss.length - 1) {
+                                ids += ",";
+                            }
+                        }
+                        $.post("/item/offstock", {"ids": ids}, function (data) {
+                            if (data.Status == 200) {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '下架' + ids + '成功',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                                $("#item_table").datagrid("reload")
+                            } else {
+                                $.messager.show({
+                                    title: '系统消息',
+                                    msg: '下架失败,请检查商品是否已经处于下架状态',
+                                    showType: 'show',
+                                    showType: 'slide'
+                                });
+                            }
+                        })
+                    }
+                }
+            }]
+
+        });
+    })
+</script>
+<table id="item_table"></table>
+<div id="item_dialog"></div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="23ba5a83-ccb0-4f28-af9d-6d22163a6ee3" name="Default Changelist" comment="&lt;add&gt;:&lt;项目初步完成&gt;">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Go File" />
+      </list>
+    </option>
+  </component>
+  <component name="GOROOT" path="D:\BaiduNetdiskDownload\go1.10.windows-amd64\go" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitToolBoxStore">
+    <option name="projectConfigVersion" value="2" />
+  </component>
+  <component name="ProjectId" id="1kpogEoNcXsnrSqiPxx7XNcCvwR" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="DefaultGoTemplateProperty" value="Go File" />
+    <property name="GO_FMT" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="configurable.Global.GOPATH.is.expanded" value="true" />
+    <property name="configurable.Module.GOPATH.is.expanded" value="false" />
+    <property name="configurable.Project.GOPATH.is.expanded" value="true" />
+    <property name="go.import.settings.migrated" value="true" />
+    <property name="go.sdk.automatically.set" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\git\Ego" />
+      <recent name="D:\git\Ego\src\item" />
+      <recent name="D:\git\Ego\view" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Build.go build Ego/">
+    <configuration name="go build Ego/" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Ego" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build FileShare.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Ego" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/FileShare.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build FileSys.go" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Ego" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="FILE" />
+      <filePath value="$PROJECT_DIR$/FileSys.go" />
+      <directory value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go build src/" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Ego" />
+      <working_directory value="$PROJECT_DIR$" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$/src" />
+      <method v="2" />
+    </configuration>
+    <configuration name="go test Ego" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Ego" />
+      <working_directory value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <kind value="DIRECTORY" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Build.go build Ego/" />
+        <item itemvalue="Go Build.go build src/" />
+        <item itemvalue="Go Build.go build FileShare.go" />
+        <item itemvalue="Go Build.go build FileSys.go" />
+        <item itemvalue="Go Test.go test Ego" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="&lt;add&gt;:&lt;后台页面&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;子类目查询&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;商品删除&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;类目树&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;上传图片&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;新增商品&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;SQL&amp;ReadMe&gt;" />
+    <MESSAGE value="&lt;Update&gt;:&lt;ReadMe&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;参数查询&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;参数删除&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;参数新增&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;商品修改&gt;" />
+    <MESSAGE value="&lt;add&gt;:&lt;项目初步完成&gt;" />
+    <option name="LAST_COMMIT_MESSAGE" value="&lt;add&gt;:&lt;项目初步完成&gt;" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="281" y="0" key="CommitChangelistDialog2" timestamp="1606739243832">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="281" y="0" key="CommitChangelistDialog2/0.0.1366.738@0.0.1366.738" timestamp="1606739243832" />
+    <state x="129" y="56" key="DiffContextDialog" timestamp="1607088865989">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="129" y="56" key="DiffContextDialog/0.0.1366.738@0.0.1366.738" timestamp="1607088865989" />
+    <state x="463" y="123" key="FileChooserDialogImpl" timestamp="1606486649615">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="463" y="123" key="FileChooserDialogImpl/0.0.1366.738@0.0.1366.738" timestamp="1606486649615" />
+    <state width="1323" height="2" key="GridCell.Tab.0.bottom" timestamp="1607012181500">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1323" height="2" key="GridCell.Tab.0.bottom/0.0.1366.738@0.0.1366.738" timestamp="1607012181500" />
+    <state width="1323" height="2" key="GridCell.Tab.0.center" timestamp="1607012181499">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1323" height="2" key="GridCell.Tab.0.center/0.0.1366.738@0.0.1366.738" timestamp="1607012181499" />
+    <state width="1323" height="2" key="GridCell.Tab.0.left" timestamp="1607012181499">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1323" height="2" key="GridCell.Tab.0.left/0.0.1366.738@0.0.1366.738" timestamp="1607012181499" />
+    <state width="1323" height="2" key="GridCell.Tab.0.right" timestamp="1607012181499">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state width="1323" height="2" key="GridCell.Tab.0.right/0.0.1366.738@0.0.1366.738" timestamp="1607012181499" />
+    <state x="254" y="0" key="SettingsEditor" timestamp="1606734273630">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="254" y="0" key="SettingsEditor/0.0.1366.738@0.0.1366.738" timestamp="1606734273630" />
+    <state x="423" y="0" key="VCS.ChangeListViewerDialog" timestamp="1607088952523">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="423" y="0" key="VCS.ChangeListViewerDialog/0.0.1366.738@0.0.1366.738" timestamp="1607088952523" />
+    <state x="275" y="98" key="Vcs.Push.Dialog.v2" timestamp="1607089013550">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="275" y="98" key="Vcs.Push.Dialog.v2/0.0.1366.738@0.0.1366.738" timestamp="1607089013550" />
+    <state x="386" y="85" width="594" height="568" key="find.popup" timestamp="1607011713027">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="386" y="85" width="594" height="568" key="find.popup/0.0.1366.738@0.0.1366.738" timestamp="1607011713027" />
+    <state x="484" y="255" key="git4idea.ui.GitResetDialog" timestamp="1607088988617">
+      <screen x="0" y="0" width="1366" height="738" />
+    </state>
+    <state x="484" y="255" key="git4idea.ui.GitResetDialog/0.0.1366.738@0.0.1366.738" timestamp="1607088988617" />
+  </component>
+</project>

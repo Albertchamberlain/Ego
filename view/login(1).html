@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ego-登录页面</title>
+    <link rel="stylesheet" type="text/css" href="/static/js/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/static/js/easyui/themes/icon.css">
+    <script type="text/javascript" src="/static/js/jquery-1.7.2.js"></script>
+    <script type="text/javascript" src="/static/js/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            //登录按钮
+            $("#login_submit").click(function () {
+                $('#login_form').form('submit', {
+                    url: 'login',
+                    onSubmit: function () {
+                        if (!$('#login_form').form("validate")){
+                            $.messager.alert('系统消息','用户名或密码不能为空！','warning');
+                            return false;
+                        }
+                    },
+                    success: function (data) {
+                       data=eval("("+data+")");
+                       if (data.Status==200){
+                           location.href="/page/index"
+                       }else{
+                           $.messager.alert('系统消息','用户名或密码不正确！','warning');
+                       }
+                    }
+                });
+            });
+            //重置按钮
+            $("#login_reset").click(function () {
+                $('#login_form').form('reset');
+            });
+        })
+    </script>
+</head>
+<body>
+<div style="width:500px; height: 300px;margin:100px auto;">
+    <div id="p" class="easyui-panel" title="登录"
+         style="width:500px;height:180px;padding:10px;background:#fafafa;">
+        <form id="login_form" method="post">
+            <table align="center" cellpadding="5">
+                <tr>
+                    <td>用户名:</td>
+                    <td><input class="easyui-validatebox" name="username"
+                               data-options="required:true,missingMessage:'用户名/手机/邮箱,不能为空'"/></td>
+                </tr>
+                <tr>
+                    <td>密码:</td>
+                    <td><input type="password" class="easyui-validatebox" name="password"
+                               data-options="required:true,missingMessage:'用户名不能为空'"/></td>
+                </tr>
+                <tr>
+                    <td><a id="login_submit" href="#" class="easyui-linkbutton"
+                           data-options="iconCls:'icon-search'">登录</a></td>
+                    <td><a id="login_reset" href="#" class="easyui-linkbutton"
+                           data-options="iconCls:'icon-search'">清空</a></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+</body>
+</html>

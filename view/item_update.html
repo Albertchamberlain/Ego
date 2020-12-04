@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //创建富文本编辑框
+    var item_update_editor = K.create('#item_update_desc', {
+        themeType: 'default'
+    });
+    //多文件上传
+    var itemUpdateEdit = K.editor({
+        allowFileManager: true,
+        uploadJson: "/item/imageupload"
+    });
+    //选择类目按钮
+    $("#item_update_selectcate").click(function () {
+        $('#item_update_dialog').dialog({
+            title: '选择类目',
+            width: 600,
+            height: 400,
+            closed: false,
+            cache: false,
+            href: '/page/item_cat_tree',
+            modal: true,
+            onLoad:function(){
+                $('#category_tree_tree').tree({
+                    url:'/item/cat/show',
+                    onClick: function(node){
+                        if(node.state=="open"){
+                            $("#item_update_selectcate_span").html(node.text);
+                            $("#item_update_selectcate_hidden").val(node.id);
+                            $('#item_update_dialog').dialog("close")
+                        }
+                    }
+                });
+            }
+        });
+    });
+    //图片上传
+    K('#item_update_imageupload').click(function () {
+        itemUpdateEdit.loadPlugin('multiimage', function () {
+            itemUpdateEdit.plugin.multiImageDialog({
+                clickFn: function (urlList) {
+                    $("#item_update_upload_span").html("");
+                    var urls = "";
+                    $.each(urlList, function (i, n) {
+                        $("#item_update_upload_span").append('<img src="' + n.url + '" width="50" height="50"/>&nbsp;')
+                        urls += n.url;
+                        if (i < urlList.length - 1) {
+                            urls += ",";
+                        }
+                    });
+
+                    $("#item_update_image_hidden").val(urls);
+                    itemUpdateEdit.hideDialog();
+                }
+            });
+        });
+    });
+    //修改按钮
+    $("#item_update_submit").click(function () {
+        $('#item_update_form').form('submit', {
+            url: '/item/update',
+            onSubmit: function () {
+                if (!$('#item_update_form').form("validate")) {
+                    $.messager.alert('系统消息', '商品类目和红色项为必添项', 'warning');
+                    return false;
+                }
+                item_update_editor.sync();
+
+                var paramDataString ="["
+                $.each($(".item_update_groupname"),function (i,n) {
+                    paramDataString+="{";
+                    paramDataString+='"group":"'+$(n).html()+'",params:[';
+                    $.each($(n).next("ul").children(),function (i2,n2) {
+                        paramDataString+='{"k":"'+$(n2).children("input").attr("sign")+'","v":"'+$(n2).children("input").val()+'"}';
+                        if(i2<$(n).next("ul").children().length-1){
+                            paramDataString+=",";
+                        }
+                    });
+                    paramDataString+="]}";
+                    if(i<$(".item_update_groupname").length-1){
+                        paramDataString+=",";
+                    }
+                });
+                paramDataString +="]";
+                $("#item_update_input_hidden_paramData").val(paramDataString);
+
+            },
+            success: function (data) {
+                //easyui form,返回数据需要解析
+                var json = eval("("+data+")")
+                if (json.Status == 200) {
+                    $.messager.show({
+                        title: '系统消息',
+                        msg: '修改成功',
+                        showType: 'show',
+                        showType: 'slide'
+                    });
+                    $('#item_dialog').dialog("close");
+                    $("#item_update_hiddenparam").hide();
+                    $("#item_table").datagrid("reload");
+                } else {
+                    $.messager.show({
+                        title: '系统消息',
+                        msg: '修改失败',
+                        showType: 'show',
+                        showType: 'slide'
+                    });
+                }
+            }
+        });
+    });
+</script>
+<form id="item_update_form" method="post">
+    <input type="hidden" name="paramData" id="item_update_input_hidden_paramData"/>
+    <input type="hidden" name="Id" id="item_update_id"/>
+    <table cellpadding="8px" align="center" style="margin: 10px;">
+        <tr>
+            <td width="60px">商品类目:</td>
+            <td><a id="item_update_selectcate" href="#" class="easyui-linkbutton">选择类目</a>&nbsp;<span
+                    id="item_update_selectcate_span"></span><input name="Cid" id="item_update_selectcate_hidden"
+                                                                   class="easyui-validatebox" type="hidden"
+                                                                   data-options="required:true"/></td>
+        </tr>
+        <tr>
+            <td>商品标题:</td>
+            <td><input class="easyui-validatebox" data-options="required:true,missingMessage:'必填'" id="item_update_title"
+                       style="width:300px;" name="Title"/></td>
+        </tr>
+        <tr>
+            <td>商品卖点:</td>
+            <td><textarea cols="40" rows="5" name="SellPoint" id="item_update_sellpoint"></textarea></td>
+        </tr>
+        <tr>
+            <td>商品价格:</td>
+            <td>
+                <input id="item_update_price_show" class="easyui-validatebox" name="Price1"
+                       data-options="required:true,missingMessage:'必填'" style="width:250px;" />
+                <input id="item_update_price_hidden" class="easyui-validatebox" name="Price" type="hidden"
+                       style="width:250px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>库存数量:</td>
+            <td><input class="easyui-validatebox" data-options="required:true,missingMessage:'必填'" name="Num" id="item_update_num"
+                       style="width:250px;"/></td>
+        </tr>
+        <tr>
+            <td>商品图片:</td>
+            <td><a id="item_update_imageupload" href="#" class="easyui-linkbutton">上传图片</a><span
+                    id="item_update_upload_span"></span>
+                <input type="hidden" id="item_update_image_hidden" name="Image"/>
+            </td>
+        </tr>
+        <tr>
+            <td>状态:</td>
+            <td>
+                <select id="item_update_status" name="Status">
+                    <option value="1">正常</option>
+                    <option value="2">下架</option>
+                    <option value="3">删除</option>
+                </select>
+            </td>
+        </tr>
+        <tr style="display: none;" id="item_update_hiddenparam">
+            <td>
+                规格参数:
+            </td>
+            <td id="item_update_param_td">
+
+            </td>
+        </tr>
+        <tr>
+            <td>商品描述:</td>
+            <td><textarea id="item_update_desc"
+                          style="width:700px;height:200px;visibility:hidden;" name="Desc"></textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a id="item_update_submit" href="#" class="easyui-linkbutton">修改</a></td>
+        </tr>
+    </table>
+</form>
+<div id="item_update_dialog"></div>
+</body>
+</html>

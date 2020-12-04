@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script type="text/javascript">
+    //创建富文本编辑框
+    var textEditor = K.create('#item_add_desc', {
+        themeType: 'default'
+    });
+
+    //选择类目按钮
+    $("#item_add_selectcate").click(function () {
+        $('#item_add_dialog').dialog({
+            title: '选择类目',
+            width: 600,
+            height: 400,
+            closed: false,
+            cache: false,
+            href: '/page/item_cat_tree',
+            modal: true,
+            onLoad:function(){
+                $('#category_tree_tree').tree({
+                    url:'/item/cat/show',
+                    onClick: function(node){
+                        if(node.state=="open"){
+                            $("#item_add_hiddenparam").hide();
+                            $.post("/item/param/iscat", {"catid": node.id}, function (data) {
+                                if (data.Status == 400) {
+                                    $("#item_add_hiddenparam").show();
+                                   var json= eval("("+data.Data+")");
+                                   var paramString = "";
+                                   for(var i = 0 ;i<json.length;i++){
+                                       paramString+="<div class='item_add_groupname'>"+json[i].group+"</div>";
+                                       paramString+="<ul>";
+                                       for(var j=0;j<json[i].params.length;j++){
+                                           paramString+="<li>"+json[i].params[j]+":<input type='text' sign='"+json[i].params[j]+"'/></li>";
+                                       }
+                                       paramString+="</ul>";
+                                   }
+                                   $("#item_add_param_td").html(paramString);
+                                }
+                                $("#item_add_selectcate_span").html(node.text);
+                                $("#item_add_selectcate_hidden").val(node.id);
+                                $('#item_add_dialog').dialog("close");
+                            })
+                        }
+                    }
+                });
+            }
+        });
+    });
+    //多文件上传
+    var itemAddEdit = K.editor({
+        allowFileManager: true,
+        uploadJson: "/item/imageupload"
+    });
+    K('#item_add_imageupload').click(function () {
+        itemAddEdit.loadPlugin('multiimage', function () {
+            itemAddEdit.plugin.multiImageDialog({
+                clickFn: function (urlList) {
+                    $("#item_add_upload_span").html("");
+                    var urls = "";
+                    $.each(urlList, function (i, n) {
+                        $("#item_add_upload_span").append('<img src="' + n.url + '" width="50" height="50"/>&nbsp;')
+                        urls += n.url;
+                        if (i < urlList.length - 1) {
+                            urls += ",";
+                        }
+                    })
+
+                    $("#item_add_image_hidden").val(urls);
+                    itemAddEdit.hideDialog();
+                }
+            });
+        });
+    });
+    //新增按钮
+    $("#item_add_submit").click(function () {
+        $('#item_add_form').form('submit', {
+            url: '/item/add',
+            onSubmit: function () {
+                if (!$('#item_add_form').form("validate")) {
+                    $.messager.alert('系统消息', '商品类目和红色项为必添项', 'warning');
+                    return false;
+                }
+                textEditor.sync();
+                var paramDataString ="["
+                $.each($(".item_add_groupname"),function (i,n) {
+                    paramDataString+="{";
+                    paramDataString+='"group":"'+$(n).html()+'",params:[';
+                    $.each($(n).next("ul").children(),function (i2,n2) {
+                        paramDataString+='{"k":"'+$(n2).children("input").attr("sign")+'","v":"'+$(n2).children("input").val()+'"}';
+                        if(i2<$(n).next("ul").children().length-1){
+                            paramDataString+=",";
+                        }
+                    });
+                    paramDataString+="]}";
+                    if(i<$(".item_add_groupname").length-1){
+                        paramDataString+=",";
+                    }
+                });
+                paramDataString +="]";
+                $("#item_add_input_hidden_paramData").val(paramDataString);
+            },
+            success: function (data) {
+                //easyui form,返回数据需要解析
+                var json = eval("("+data+")")
+                if (json.Status == 200) {
+                    $.messager.show({
+                        title: '系统消息',
+                        msg: '新增成功',
+                        showType: 'show',
+                        showType: 'slide'
+                    });
+                    $('#item_add_form').form('reset');
+                    $("#item_add_selectcate_span").html("");
+                    $("#item_add_selectcate_hidden").val("");
+                    textEditor.html("");
+                    textEditor.sync();
+                    $("#item_add_param_td").hide();
+                } else {
+                    $.messager.show({
+                        title: '系统消息',
+                        msg: '新增商品失败',
+                        showType: 'show',
+                        showType: 'slide'
+                    });
+                }
+            }
+        });
+    });
+    //价格设置
+    $("#item_add_price_show").blur(function () {
+        var price = parseInt($(this).val());
+        $("#item_add_price_hidden").val(price * 100);
+    });
+</script>
+<form id="item_add_form" method="post">
+    <input type="hidden" name="paramData" id="item_add_input_hidden_paramData"/>
+    <table cellpadding="8px" align="center" style="margin: 10px;">
+        <tr>
+            <td width="60px">商品类目:</td>
+            <td><a id="item_add_selectcate" href="#" class="easyui-linkbutton">选择类目</a>&nbsp;<span
+                    id="item_add_selectcate_span"></span><input name="Cid" id="item_add_selectcate_hidden"
+                                                                class="easyui-validatebox" type="hidden"
+                                                                data-options="required:true"/></td>
+        </tr>
+        <tr>
+            <td>商品标题:</td>
+            <td><input class="easyui-validatebox" data-options="required:true,missingMessage:'必填'"
+                       style="width:300px;" name="Title"/></td>
+        </tr>
+        <tr>
+            <td>商品卖点:</td>
+            <td><textarea cols="40" rows="5" name="SellPoint"></textarea></td>
+        </tr>
+        <tr>
+            <td>商品价格:</td>
+            <td>
+                <input id="item_add_price_show" class="easyui-validatebox" name="Price1"
+                       data-options="required:true,missingMessage:'必填'" style="width:250px;"/>
+                <input id="item_add_price_hidden" class="easyui-validatebox" name="Price" type="hidden"
+                       style="width:250px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>库存数量:</td>
+            <td><input class="easyui-validatebox" data-options="required:true,missingMessage:'必填'" name="Num"
+                       style="width:250px;"/></td>
+        </tr>
+        <tr>
+            <td>商品图片:</td>
+            <td><a id="item_add_imageupload" href="#" class="easyui-linkbutton">上传图片</a><span
+                    id="item_add_upload_span"></span>
+                <input type="hidden" id="item_add_image_hidden" name="Image"/>
+            </td>
+        </tr>
+        <tr>
+            <td>商品描述:</td>
+            <td><textarea id="item_add_desc"
+                          style="width:700px;height:200px;visibility:hidden;" name="Desc"></textarea></td>
+        </tr>
+        <tr style="display: none;" id="item_add_hiddenparam">
+            <td>
+                规格参数:
+            </td>
+            <td id="item_add_param_td">
+
+            </td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a id="item_add_submit" href="#" class="easyui-linkbutton">新增</a></td>
+        </tr>
+    </table>
+</form>
+<div id="item_add_dialog"></div>
+</body>
+</html>

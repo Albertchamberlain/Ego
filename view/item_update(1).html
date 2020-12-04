@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<script type="text/javascript">
+    //创建富文本编辑框
+    var item_update_editor = K.create('#item_update_desc', {
+        themeType: 'default'
+    });
+    //多文件上传
+    var itemUpdateEdit = K.editor({
+        allowFileManager: true,
+        uploadJson: "/item/imageupload"
+    });
+
+</script>
+<form id="item_update_form" method="post">
+    <input type="hidden" name="Id" id="item_update_id"/>
+    <table cellpadding="8px" align="center" style="margin: 10px;">
+        <tr>
+            <td width="60px">商品类目:</td>
+            <td><a id="item_update_selectcate" href="#" class="easyui-linkbutton">选择类目</a>&nbsp;<span
+                    id="item_update_selectcate_span"></span><input name="Cid" id="item_update_selectcate_hidden"
+                                                                   class="easyui-validatebox" type="hidden"
+                                                                   data-options="required:true"/></td>
+        </tr>
+        <tr>
+            <td>商品标题:</td>
+            <td><input class="easyui-validatebox" data-options="required:true,missingMessage:'必填'" id="item_update_title"
+                       style="width:300px;" name="Title"/></td>
+        </tr>
+        <tr>
+            <td>商品卖点:</td>
+            <td><textarea cols="40" rows="5" name="SellPoint" id="item_update_sellpoint"></textarea></td>
+        </tr>
+        <tr>
+            <td>商品价格:</td>
+            <td>
+                <input id="item_update_price_show" class="easyui-validatebox" name="Price1"
+                       data-options="required:true,missingMessage:'必填'" style="width:250px;" />
+                <input id="item_update_price_hidden" class="easyui-validatebox" name="Price" type="hidden"
+                       style="width:250px;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>库存数量:</td>
+            <td><input class="easyui-validatebox" data-options="required:true,missingMessage:'必填'" name="Num" id="item_update_num"
+                       style="width:250px;"/></td>
+        </tr>
+        <tr>
+            <td>商品图片:</td>
+            <td><a id="item_update_imageupload" href="#" class="easyui-linkbutton">上传图片</a><span
+                    id="item_update_upload_span"></span>
+                <input type="hidden" id="item_update_image_hidden" name="Image"/>
+            </td>
+        </tr>
+        <tr>
+            <td>状态:</td>
+            <td>
+                <select id="item_update_status" name="Status">
+                    <option value="1">正常</option>
+                    <option value="2">下架</option>
+                    <option value="3">删除</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>商品描述:</td>
+            <td><textarea id="item_update_desc"
+                          style="width:700px;height:200px;visibility:hidden;" name="Desc"></textarea></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td><a id="item_update_submit" href="#" class="easyui-linkbutton">修改</a></td>
+        </tr>
+    </table>
+</form>
+</body>
+</html>
