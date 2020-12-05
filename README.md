@@ -37,6 +37,6 @@
 
 知识点总结🎇：
 
-ParseForm()  :解析url传递的参数，对于POST则解析响应包的主体（request body）
+ParseForm()  :解析url传递的参数，对于POST则解析请求包的主体（request body）
 
 将多表操作在业务层组成一个事务
